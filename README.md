@@ -1,9 +1,9 @@
 # mgob
 
-[![Build Status](https://travis-ci.org/stefanprodan/mgob.svg?branch=master)](https://travis-ci.org/stefanprodan/mgob)
-[![Docker Image](https://images.microbadger.com/badges/image/stefanprodan/mgob:edge.svg)](https://hub.docker.com/r/stefanprodan/mgob/)
+[![Build Status](https://travis-ci.org/eric-leblouch/mgob.svg?branch=master)](https://travis-ci.org/eric-leblouch/mgob)
+[![Docker Image](https://images.microbadger.com/badges/image/eric-leblouch/mgob:edge.svg)](https://hub.docker.com/r/eric-leblouch/mgob/)
 
-MGOB is a MongoDB backup automation tool built with golang.
+MGOGITB is a MongoDB and Gitlab backup automation tool built with golang.
 
 #### Features
 
@@ -19,20 +19,18 @@ MGOB is a MongoDB backup automation tool built with golang.
 
 #### Install
 
-MGOB is available on Docker Hub at [stefanprodan/mgob](https://hub.docker.com/r/stefanprodan/mgob/).
+MGOGITB is available on Docker Hub at [eric-leblouch/mgob](https://hub.docker.com/r/eric-leblouch/mgob/).
 
 Supported tags:
 
-* `stefanprodan/mgob:latest` latest stable [release](https://github.com/stefanprodan/mgob/releases)
-* `stefanprodan/mgob:edge` master branch latest successful [build](https://travis-ci.org/stefanprodan/mgob)
+* `ericleblouch/mgob:latest` latest stable [release](https://github.com/eric-leblouch/mgob/releases)
+* `ericleblouch/mgob:edge` master branch latest successful [build](https://travis-ci.org/eric-leblouch/mgob)
 
 Compatibility matrix:
 
- MGOB| MongoDB
+ MGOB| MongoDB| Gitlab
 -----|--------
-`stefanprodan/mgob:0.9` | 3.4
-`stefanprodan/mgob:0.10` | 3.6
-`stefanprodan/mgob:1.0` | 4.0
+`ericleblouch/mgob:0.1` | 4.0| 11.6
 
 Docker:
 
@@ -42,13 +40,13 @@ docker run -dp 8090:8090 --name mgob \
     -v "/mgob/storage:/storage" \
     -v "/mgob/tmp:/tmp" \
     -v "/mgob/data:/data" \
-    stefanprodan/mgob \
+    ericleblouch/mgob \
     -LogLevel=info
 ```
 
 Kubernetes:
 
-A step by step guide on running MGOB as a StatefulSet with PersistentVolumeClaims can be found [here](https://github.com/stefanprodan/mgob/tree/master/k8s).
+A step by step guide on running MGOB as a StatefulSet with PersistentVolumeClaims can be found [here](https://github.com/eric-leblouch/mgob/tree/master/k8s).
 
 #### Configure
 
@@ -66,17 +64,20 @@ scheduler:
   # backup operation timeout in minutes
   timeout: 60
 target:
+  platform: mongodb
+  existingSecret: mgogit-secrets
+  # Secrets should include the following fields:
   # mongod IP or host name
-  host: "172.18.7.21"
+  # host: "172.18.7.21"
   # mongodb port
-  port: 27017
+  # port: 27017
   # mongodb database name, leave blank to backup all databases
-  database: "test"
+  # database: "test"
   # leave blank if auth is not enabled
-  username: "admin"
-  password: "secret"
+  # username: "admin"
+  # password: "secret"
   # add custom params to mongodump (eg. Auth or SSL support), leave blank if not needed
-  params: "--ssl --authenticationDatabase admin"
+  # params: "--ssl --authenticationDatabase admin"
 # S3 upload (optional)
 s3:
   url: "https://play.minio.io:9000"

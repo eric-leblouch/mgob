@@ -11,7 +11,7 @@ Requirements:
 Clone the mgob repository:
 
 ```bash
-$ git clone https://github.com/stefanprodan/mgob.git
+$ git clone https://github.com/eric-leblouch/mgob.git
 $ cd mgob/k8s
 ```
 

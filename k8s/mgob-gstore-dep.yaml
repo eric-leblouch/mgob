@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: mgobd
-        image: stefanprodan/mgob:edge
+        image: ericleblouch/mgob:edge
         imagePullPolicy: Always
         ports:
         - containerPort: 8090

@@ -5,13 +5,13 @@
 # attempting to apply the chart to your cluster.
 replicaCount: 1
 image:
-  repository: stefanprodan/mgob
+  repository: ericleblouch/mgob
   pullPolicy: IfNotPresent
 
   # We need edge to be able to use the "configMap.data[name].target.params", required to set the auth db.
   # When this is official, update to the proper stable release.
   #
-  # @see https://github.com/stefanprodan/mgob/commit/b70e86b3acba8c82447a568cfcdd31fbd5ee3f7c
+  # @see https://github.com/eric-leblouch/mgob/commit/b70e86b3acba8c82447a568cfcdd31fbd5ee3f7c
   tag: edge
 service:
   name: mgob
@@ -43,12 +43,8 @@ configMap:
     # Add each plan as per below.
     the-first-database.yml: |
       target:
-        host: "mongodb-replicaset"
-        port: 27017
-        database: "my-database"
-        username: "mongodb-backup"
-        password: "backup-user-pwd"
-        params: "--authenticationDatabase admin"
+        type: mongodb
+        existingSecret: mongodb-connection-secrets
       scheduler:
         cron: "0 5 * * *"
         retention: 7

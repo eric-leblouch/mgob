@@ -12,20 +12,50 @@ import (
 )
 
 func dump(plan config.Plan, tmpPath string, ts time.Time) (string, string, error) {
+	switch plan.Target.Platform {
+	case "influxdb":
+		return dumpInfluxDB(plan, tmpPath, ts)
+	case "prometheus":
+		return dumpPrometheus(plan, tmpPath, ts)
+	case "gitlab":
+		return dumpGitlab(plan, tmpPath, ts)
+	case "mongodb":
+		target, err := config.LoadMongoDBTarget("/secrets", plan.Target.ExistingSecret)
+		if err != nil {
+			return "", "", errors.Wrapf(err, "Cannot load target %v", plan.Target.ExistingSecret)
+		}
+		return dumpMongo(plan, target, tmpPath, ts)
+	}
+	return "", fmt.Sprintf("Unknown platform %v", plan.Target.Platform), nil
 
+}
+
+func dumpInfluxDB(plan config.Plan, tmpPath string, ts time.Time) (string, string, error) {
+		return "", "", errors.Wrapf(nil, "Not implemented", "")
+}
+
+func dumpPrometheus(plan config.Plan, tmpPath string, ts time.Time) (string, string, error) {
+		return "", "", errors.Wrapf(nil, "Not implemented", "")
+}
+
+func dumpGitlab(plan config.Plan, tmpPath string, ts time.Time) (string, string, error) {
+		return "", "", errors.Wrapf(nil, "Not implemented", "")
+}
+
+func dumpMongo(plan config.Plan, target config.MongoDBTarget, tmpPath string, ts time.Time) (string, string, error) {
 	archive := fmt.Sprintf("%v/%v-%v.gz", tmpPath, plan.Name, ts.Unix())
 	log := fmt.Sprintf("%v/%v-%v.log", tmpPath, plan.Name, ts.Unix())
 
 	dump := fmt.Sprintf("mongodump --archive=%v --gzip --host %v --port %v ",
-		archive, plan.Target.Host, plan.Target.Port)
-	if plan.Target.Database != "" {
-		dump += fmt.Sprintf("--db %v ", plan.Target.Database)
+		archive, target.Host, target.Port)
+	if target.Database != "" {
+		dump += fmt.Sprintf("--db %v ", target.Database)
 	}
-	if plan.Target.Username != "" && plan.Target.Password != "" {
-		dump += fmt.Sprintf("-u %v -p %v ", plan.Target.Username, plan.Target.Password)
+	if target.Username != "" && target.Password != "" {
+		dump += fmt.Sprintf("-u %v -p %v ", target.Username, target.Password)
 	}
-	if plan.Target.Params != "" {
-		dump += fmt.Sprintf("%v", plan.Target.Params)
+	if target.Params != "" {
+		dump += fmt.Sprintf("%v", target.Params)
 	}
 
 	output, err := sh.Command("/bin/sh", "-c", dump).SetTimeout(time.Duration(plan.Scheduler.Timeout) * time.Minute).CombinedOutput()
@@ -62,7 +92,7 @@ func applyRetention(path string, retention int) error {
 	log := fmt.Sprintf("cd %v && rm -f $(ls -1t *.log | tail -n +%v)", path, retention+1)
 	err = sh.Command("/bin/sh", "-c", log).Run()
 	if err != nil {
-		return errors.Wrapf(err, "removing old log files from %v failed", path)
+		return errors.Wrapf(nil, "removing old log files from %v failed", path)
 	}
 
 	return nil

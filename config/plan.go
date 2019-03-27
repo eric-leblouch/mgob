@@ -23,12 +23,30 @@ type Plan struct {
 }
 
 type Target struct {
+        ExistingSecret string `yaml:"existingSecret"`
+        Release        string `yaml:"release"`
+        Platform       string `yaml:"platform"`
+}
+
+type MongoDBTarget struct {
 	Database string `yaml:"database"`
 	Host     string `yaml:"host"`
 	Password string `yaml:"password"`
 	Port     int    `yaml:"port"`
 	Username string `yaml:"username"`
 	Params   string `yaml:"params"`
+}
+
+type GitlabTarget struct {
+	Release string `yaml:"release"`
+}
+
+type PrometheusTarget struct {
+	Release string `yaml:"release"`
+}
+
+type InfluxDBTarget struct {
+	Release string `yaml:"release"`
 }
 
 type Scheduler struct {
@@ -109,6 +127,37 @@ func LoadPlan(dir string, name string) (Plan, error) {
 	plan.Name = strings.TrimSuffix(filename, filepath.Ext(filename))
 
 	return plan, nil
+}
+
+func LoadMongoDBTarget(dir string, name string) (MongoDBTarget, error) {
+	target := MongoDBTarget{}
+	targetPath := ""
+	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
+		if strings.Contains(path, name+".yml") || strings.Contains(path, name+".yaml") {
+			targetPath = path
+		}
+		return nil
+	})
+
+	if err != nil {
+		return target, errors.Wrapf(err, "Reading from %v failed", dir)
+	}
+
+	if len(targetPath) < 1 {
+		return target, errors.Errorf("Target %v not found", name)
+	}
+
+	data, err := ioutil.ReadFile(targetPath)
+	if err != nil {
+		return target, errors.Wrapf(err, "Reading %v failed", targetPath)
+	}
+        dataExp := []byte(os.ExpandEnv(string(data)))
+
+	if err := yaml.Unmarshal(dataExp, &target); err != nil {
+		return target, errors.Wrapf(err, "Parsing %v failed", targetPath)
+	}
+
+	return target, nil
 }
 
 func LoadPlans(dir string) ([]Plan, error) {

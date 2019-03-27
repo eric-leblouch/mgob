@@ -1,10 +1,10 @@
 SHELL:=/bin/bash
 
-APP_VERSION?=1.0
+APP_VERSION?=0.1
 
 # build vars
 BUILD_DATE:=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-REPOSITORY:=stefanprodan
+REPOSITORY:=ericleblouch
 
 #run vars
 CONFIG:=$$(pwd)/test/config

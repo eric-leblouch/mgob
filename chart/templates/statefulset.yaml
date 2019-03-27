@@ -32,6 +32,11 @@ spec:
           name: {{ $.Values.configMap.name }}
           subPath: {{ $name | quote }}
 {{ end }}
+{{- range $name, $value := .Values.configMap.secret }}
+        - mountPath: "/secret/{{ $name }}"
+          name: {{ $name }}
+          readOnly: true
+{{ end }}
       volumes:
       - name: {{ .Values.configMap.name }}
         configMap:
@@ -40,6 +45,11 @@ spec:
 {{- range $name, $value := .Values.configMap.data }}
           - key: {{ $name }}
             path: {{ $name }}
+{{ end }}
+{{- range $name, $value := .Values.configMap.data }}
+      - name: $name
+        secret:
+          secretName: $value
 {{ end }}
   volumeClaimTemplates:
   - metadata:

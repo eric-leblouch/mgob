@@ -15,7 +15,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
-ENV MONGODB_TOOLS_VERSION 4.0.5-r0
+ENV MONGODB_TOOLS_VERSION 4.0.6-r0
 ENV GOOGLE_CLOUD_SDK_VERSION 235.0.0
 ENV AZURE_CLI_VERSION 2.0.58
 ENV PATH /root/google-cloud-sdk/bin:$PATH
@@ -23,10 +23,10 @@ ENV PATH /root/google-cloud-sdk/bin:$PATH
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="mgob" \
       org.label-schema.description="MongoDB backup automation tool" \
-      org.label-schema.url="https://github.com/stefanprodan/mgob" \
+      org.label-schema.url="https://github.com/eric-leblouch/mgob" \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/stefanprodan/mgob" \
-      org.label-schema.vendor="stefanprodan.com" \
+      org.label-schema.vcs-url="https://github.com/eric-leblouch/mgob" \
+      org.label-schema.vendor="mydatamodels.com" \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0"
 
@@ -40,8 +40,8 @@ WORKDIR /root/
 # https://github.com/GoogleCloudPlatform/cloud-sdk-docker/blob/69b7b0031d877600a9146c1111e43bc66b536de7/alpine/Dockerfile
 RUN apk --no-cache add \
         curl \
-        python \
-        py-crcmod \
+        python3 \
+        py3-crcmod \
         bash \
         libc6-compat \
         openssh-client \
@@ -56,11 +56,12 @@ RUN apk --no-cache add \
     gcloud --version
 
 # install azure-cli
-RUN apk add py-pip && \
-  apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev make && \
-  pip install --upgrade pip && \
-  pip install cffi && \
-  pip install azure-cli==${AZURE_CLI_VERSION} && \
+RUN apk add py3-pip && \
+  apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python3-dev make && \
+  pip3 install --upgrade pip && \
+  pip3 install cffi && \
+  pip3 install azure-cli==${AZURE_CLI_VERSION} && \
+  sed -i 's/python -m/python3 -m/' /usr/bin/az && \
   apk del --purge build
 
 COPY --from=0 /go/src/github.com/stefanprodan/mgob/mgob .
