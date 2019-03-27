@@ -1,0 +1,7 @@
+target:
+  platform: mongodb
+  existingSecret: dev.yml
+scheduler:
+  cron: "*/3 * * * *"
+  retention: 5
+  timeout: 1

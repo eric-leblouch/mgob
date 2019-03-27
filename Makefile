@@ -25,7 +25,8 @@ travis:
 	@echo ">>> Starting mgob container"
 	@docker run -d --net=host --name mgob \
 	    --restart unless-stopped \
-	    -v "$(TRAVIS):/config" \
+	    -v "$(TRAVIS)/config:/config" \
+	    -v "$(TRAVIS)/secrets:/secrets" \
         $(REPOSITORY)/mgob:$(APP_VERSION).$(TRAVIS_BUILD_NUMBER) \
 		-ConfigPath=/config \
 		-StoragePath=/storage \
@@ -48,7 +49,8 @@ run: build
 	@echo ">>> Starting mgob container"
 	@docker run -dp 8090:8090 --name mgob-$(APP_VERSION) \
 	    --restart unless-stopped \
-	    -v "$(CONFIG):/config" \
+	    -v "$(CONFIG)/config:/config" \
+	    -v "$(CONFIG)/secrets:/secrets" \
         $(REPOSITORY)/mgob:$(APP_VERSION) \
 		-ConfigPath=/config \
 		-StoragePath=/storage \

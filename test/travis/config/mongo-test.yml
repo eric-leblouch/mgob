@@ -3,9 +3,8 @@ scheduler:
   retention: 5
   timeout: 60
 target:
-  host: "127.0.0.1"
-  port: 27017
-  database: test
+  platform: mongodb
+  existingSecret: test.yml
 s3:
   url: "http://127.0.0.1:9000"
   bucket: "backup"

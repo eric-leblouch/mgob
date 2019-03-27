@@ -66,6 +66,6 @@ RUN apk add py3-pip && \
 
 COPY --from=0 /go/src/github.com/stefanprodan/mgob/mgob .
 
-VOLUME ["/config", "/storage", "/tmp", "/data"]
+VOLUME ["/config", "/storage", "/tmp", "/data", "/secrets"]
 
 ENTRYPOINT [ "./mgob" ]

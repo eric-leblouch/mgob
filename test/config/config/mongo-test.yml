@@ -1,9 +1,6 @@
 target:
-  host: "172.18.7.40"
-  port: 27017
-  database: "mongoclient"
-  username: ""
-  password: ""
+  platform: mongodb
+  existingSecret: test.yml
 scheduler:
   cron: "*/2 * * * *"
   retention: 5
