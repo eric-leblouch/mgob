@@ -133,7 +133,7 @@ func LoadMongoDBTarget(dir string, name string) (MongoDBTarget, error) {
 	target := MongoDBTarget{}
 	targetPath := ""
 	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
-		if strings.Contains(path, name+".yml") || strings.Contains(path, name+".yaml") {
+		if strings.Contains(path, name) {
 			targetPath = path
 		}
 		return nil
@@ -144,7 +144,7 @@ func LoadMongoDBTarget(dir string, name string) (MongoDBTarget, error) {
 	}
 
 	if len(targetPath) < 1 {
-		return target, errors.Errorf("Target %v not found", name)
+		return target, errors.Errorf("Target %v not found in %v", name, dir)
 	}
 
 	data, err := ioutil.ReadFile(targetPath)
