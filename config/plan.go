@@ -101,7 +101,7 @@ func LoadPlan(dir string, name string) (Plan, error) {
 	plan := Plan{}
 	planPath := ""
 	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
-		if strings.Contains(path, name+".yml") || strings.Contains(path, name+".yaml") {
+		if strings.HasSuffix(path, name+".yml") || strings.HasSuffix(path, name+".yaml") {
 			planPath = path
 		}
 		return nil
@@ -133,7 +133,7 @@ func LoadMongoDBTarget(dir string, name string) (MongoDBTarget, error) {
 	target := MongoDBTarget{}
 	targetPath := ""
 	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
-		if strings.Contains(path, name) {
+		if strings.HasSuffix(path, name) {
 			targetPath = path
 		}
 		return nil
@@ -163,7 +163,7 @@ func LoadMongoDBTarget(dir string, name string) (MongoDBTarget, error) {
 func LoadPlans(dir string) ([]Plan, error) {
 	files := []string{}
 	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
-		if strings.Contains(path, "yml") || strings.Contains(path, "yaml") {
+		if strings.HasSuffix(path, "yml") || strings.HasSuffix(path, "yaml") {
 			files = append(files, path)
 		}
 		return nil
