@@ -32,11 +32,9 @@ spec:
           name: {{ $.Values.configMap.name }}
           subPath: {{ $name | quote }}
 {{ end }}
-{{- range $name, $value := .Values.configMap.secret }}
-        - mountPath: "/secret/{{ $name }}"
-          name: {{ $name }}
+        - mountPath: "/secrets"
+          name: mgob-secrets
           readOnly: true
-{{ end }}
       volumes:
       - name: {{ .Values.configMap.name }}
         configMap:
@@ -46,11 +44,9 @@ spec:
           - key: {{ $name }}
             path: {{ $name }}
 {{ end }}
-{{- range $name, $value := .Values.configMap.data }}
-      - name: $name
+      - name: mgob-secrets
         secret:
-          secretName: $value
-{{ end }}
+          secretName: mgob-secrets
   volumeClaimTemplates:
   - metadata:
       name: {{ .Values.storage.longTerm.name }}

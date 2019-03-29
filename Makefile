@@ -45,6 +45,16 @@ release:
 	@docker push $(REPOSITORY)/mgob:$(APP_VERSION)
 	@docker push $(REPOSITORY)/mgob:latest
 
+publish_manual:
+	@docker tag $(REPOSITORY)/mgob:$(APP_VERSION).$(TRAVIS_BUILD_NUMBER) $(REPOSITORY)/mgob:edge
+	@docker push $(REPOSITORY)/mgob:edge
+
+release_manual:
+	@docker tag $(REPOSITORY)/mgob:$(APP_VERSION).$(TRAVIS_BUILD_NUMBER) $(REPOSITORY)/mgob:$(APP_VERSION)
+	@docker tag $(REPOSITORY)/mgob:$(APP_VERSION).$(TRAVIS_BUILD_NUMBER) $(REPOSITORY)/mgob:latest
+	@docker push $(REPOSITORY)/mgob:$(APP_VERSION)
+	@docker push $(REPOSITORY)/mgob:latest
+
 run: build
 	@echo ">>> Starting mgob container"
 	@docker run -dp 8090:8090 --name mgob-$(APP_VERSION) \
